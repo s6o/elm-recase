@@ -220,7 +220,9 @@ fromKebab (KebabCase s) =
 -}
 toKebab : String -> KebabCase
 toKebab s =
-    KebabCase s
+    recase ToSnake s
+        |> String.replace "_" "-"
+        |> KebabCase
 
 
 {-| A PascalCase aka UpperCase `String`.
