@@ -180,7 +180,9 @@ fromConstant (ConstantCase s) =
 -}
 toConstant : String -> ConstantCase
 toConstant s =
-    ConstantCase s
+    recase ToSnake s
+        |> String.toUpper
+        |> ConstantCase
 
 
 {-| A dot.case `String`.
