@@ -44,6 +44,10 @@ module ReCase exposing
 
 -}
 
+import Regex
+
+
+
 -- GENERIC API
 
 
@@ -110,8 +114,53 @@ fromCamel (CamelCase s) =
 {-| Convert `String` to `CamelCase`.
 -}
 toCamel : String -> CamelCase
-toCamel s =
-    CamelCase s
+toCamel src =
+    if String.isEmpty src then
+        CamelCase src
+
+    else
+        let
+            mr1 =
+                Regex.fromString "^[_\\.\\-/\\s]+"
+
+            mr2 =
+                Regex.fromString "([a-zA-Z]+)([A-Z][a-z\\d]+)"
+
+            mr3 =
+                Regex.fromString "[_\\.\\-/\\s]+(\\w|$)"
+        in
+        Maybe.map3
+            (\r1 r2 r3 ->
+                src
+                    |> String.trim
+                    |> Regex.replace r1 (\r -> "")
+                    |> Regex.replace r2
+                        (\r ->
+                            case r.submatches of
+                                fst :: snd :: _ ->
+                                    Maybe.map2 (\f s -> f ++ "-" ++ s) fst snd
+                                        |> Maybe.withDefault r.match
+
+                                _ ->
+                                    r.match
+                        )
+                    |> String.toLower
+                    |> Regex.replace r3
+                        (\r ->
+                            case r.submatches of
+                                fst :: _ ->
+                                    Maybe.map String.toUpper fst
+                                        |> Maybe.withDefault r.match
+
+                                _ ->
+                                    r.match
+                        )
+                    |> CamelCase
+            )
+            mr1
+            mr2
+            mr3
+            |> Maybe.withDefault (CamelCase "")
 
 
 {-| A CONSTANT\_CASE `String`.
