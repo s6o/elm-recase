@@ -345,8 +345,56 @@ fromSnake (SnakeCase s) =
 {-| Convert `String` to `SnakeCase`.
 -}
 toSnake : String -> SnakeCase
-toSnake s =
-    SnakeCase s
+toSnake src =
+    if String.isEmpty src then
+        SnakeCase src
+
+    else
+        let
+            mr1 =
+                Regex.fromString "[^a-zA-Z0-9]+"
+
+            mr2 =
+                Regex.fromString "[\\s\\.\\-]"
+
+            mr3 =
+                Regex.fromString "([a-z\\d])([A-Z])"
+
+            mr4 =
+                Regex.fromString "([A-Z]+)([A-Z][a-z\\d]+)"
+
+            sep =
+                "_"
+
+            subsep r =
+                case r.submatches of
+                    fst :: snd :: _ ->
+                        Maybe.map2 (\f s -> f ++ sep ++ s) fst snd
+                            |> Maybe.withDefault r.match
+
+                    _ ->
+                        r.match
+        in
+        Maybe.map4
+            (\r1 r2 r3 r4 ->
+                src
+                    |> Regex.split r1
+                    |> List.map
+                        (\word ->
+                            word
+                                |> Regex.replace r2 (\_ -> sep)
+                                |> Regex.replace r3 subsep
+                                |> Regex.replace r4 subsep
+                        )
+                    |> String.join sep
+                    |> String.toLower
+                    |> SnakeCase
+            )
+            mr1
+            mr2
+            mr3
+            mr4
+            |> Maybe.withDefault (SnakeCase "")
 
 
 {-| A Title Case `String`.
