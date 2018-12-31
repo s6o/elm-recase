@@ -240,7 +240,13 @@ fromPascal (PascalCase s) =
 -}
 toPascal : String -> PascalCase
 toPascal s =
-    PascalCase s
+    let
+        cc =
+            recase ToCamel s
+    in
+    (String.left 1 cc |> String.toUpper)
+        ++ String.dropLeft 1 cc
+        |> PascalCase
 
 
 {-| A path/case `String`.
