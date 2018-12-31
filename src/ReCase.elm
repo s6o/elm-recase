@@ -326,7 +326,10 @@ fromSentence (SentenceCase s) =
 -}
 toSentence : String -> SentenceCase
 toSentence s =
-    SentenceCase s
+    recase ToSnake s
+        |> String.replace "_" " "
+        |> (\str -> (String.left 1 str |> String.toUpper) ++ String.dropLeft 1 str)
+        |> SentenceCase
 
 
 {-| A snake\_case `String`.
