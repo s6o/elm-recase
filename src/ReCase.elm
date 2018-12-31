@@ -200,7 +200,9 @@ fromDot (DotCase s) =
 -}
 toDot : String -> DotCase
 toDot s =
-    DotCase s
+    recase ToSnake s
+        |> String.replace "_" "."
+        |> DotCase
 
 
 {-| A kebab-case `String`.
