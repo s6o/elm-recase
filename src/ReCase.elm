@@ -1,33 +1,14 @@
 module ReCase exposing
-    ( CamelCase
-    , ConstantCase
-    , DotCase
-    , KebabCase
-    , PascalCase
-    , PathCase
-    , ReCase(..)
-    , SentenceCase
-    , SnakeCase
-    , TitleCase
-    , fromCamel
-    , fromConstant
-    , fromDot
-    , fromKebab
-    , fromPascal
-    , fromPath
-    , fromSentence
-    , fromSnake
-    , fromTitle
-    , recase
-    , toCamel
-    , toConstant
-    , toDot
-    , toKebab
-    , toPascal
-    , toPath
-    , toSentence
-    , toSnake
-    , toTitle
+    ( ReCase(..), recase
+    , CamelCase, fromCamel, toCamel
+    , ConstantCase, fromConstant, toConstant
+    , DotCase, fromDot, toDot
+    , KebabCase, fromKebab, toKebab
+    , PascalCase, fromPascal, toPascal
+    , PathCase, fromPath, toPath
+    , SentenceCase, fromSentence, toSentence
+    , SnakeCase, fromSnake, toSnake
+    , TitleCase, fromTitle, toTitle
     )
 
 {-| Convert a string from a case to any other case.
@@ -35,12 +16,28 @@ module ReCase exposing
 
 ## Generic API
 
-@docs ReCase recase
+@docs ReCase, recase
 
 
-## More Explicit(ly) Type(d) API
+## More Explicitly Typed API
 
-@docs CamelCase fromCamel toCamel ConstantCase fromConstant toConstant DotCase fromDot toDot KebabCase fromKebab toKebab PascalCase fromPascal toPascal PathCase fromPath toPath SentenceCase fromSentence toSentence SnakeCase fromSnake toSnake TitleCase fromTitle toTitle
+@docs CamelCase, fromCamel, toCamel
+
+@docs ConstantCase, fromConstant, toConstant
+
+@docs DotCase, fromDot, toDot
+
+@docs KebabCase, fromKebab, toKebab
+
+@docs PascalCase, fromPascal, toPascal
+
+@docs PathCase, fromPath, toPath
+
+@docs SentenceCase, fromSentence, toSentence
+
+@docs SnakeCase, fromSnake, toSnake
+
+@docs TitleCase, fromTitle, toTitle
 
 -}
 
@@ -51,6 +48,7 @@ import Regex
 -- GENERIC API
 
 
+{-| -}
 type ReCase
     = ToCamel
     | ToConstant
@@ -63,6 +61,8 @@ type ReCase
     | ToTitle
 
 
+{-| Recase input to specified case.
+-}
 recase : ReCase -> String -> String
 recase rc src =
     case rc of
