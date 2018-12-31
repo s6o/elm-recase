@@ -250,6 +250,8 @@ toPascal s =
 
 
 {-| A path/case `String`.
+Conversions to path/case are case-sensitive, that is input's case is not changed,
+only the path separator / (slash) is inserted.
 -}
 type PathCase
     = PathCase String
@@ -265,8 +267,46 @@ fromPath (PathCase s) =
 {-| Convert `String` to `PathCase`.
 -}
 toPath : String -> PathCase
-toPath s =
-    PathCase s
+toPath src =
+    if String.isEmpty src then
+        PathCase src
+
+    else
+        let
+            mr1 =
+                Regex.fromString "[\\s\\.\\-_]"
+
+            mr2 =
+                Regex.fromString "([a-z\\d])([A-Z])"
+
+            mr3 =
+                Regex.fromString "([A-Z]+)([A-Z][a-z\\d]+)"
+
+            ps =
+                "/"
+
+            subsep r =
+                case r.submatches of
+                    fst :: snd :: _ ->
+                        Maybe.map2 (\f s -> f ++ ps ++ s) fst snd
+                            |> Maybe.withDefault r.match
+
+                    _ ->
+                        r.match
+        in
+        Maybe.map3
+            (\r1 r2 r3 ->
+                src
+                    |> String.trim
+                    |> Regex.replace r1 (\_ -> ps)
+                    |> Regex.replace r2 subsep
+                    |> Regex.replace r3 subsep
+                    |> PathCase
+            )
+            mr1
+            mr2
+            mr3
+            |> Maybe.withDefault (PathCase "")
 
 
 {-| A Sentence case `String`.
