@@ -410,8 +410,12 @@ fromTitle (TitleCase s) =
     s
 
 
-{-| Convert `String` to `SnakeCase`.
+{-| Convert `String` to `TitleCase`.
 -}
 toTitle : String -> TitleCase
 toTitle s =
-    TitleCase s
+    recase ToSnake s
+        |> String.split "_"
+        |> List.map (\w -> (String.left 1 w |> String.toUpper) ++ String.dropLeft 1 w)
+        |> String.join " "
+        |> TitleCase
