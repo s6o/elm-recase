@@ -124,7 +124,7 @@ toCamel src =
                 Regex.fromString "^[_\\.\\-/\\s]+"
 
             mr2 =
-                Regex.fromString "([a-zA-Z]+)([A-Z][a-z\\d]+)"
+                Regex.fromString "([a-zA-Z]+?)(?=[A-Z][a-z\\d])"
 
             mr3 =
                 Regex.fromString "[_\\.\\-/\\s]+(\\w|$)"
@@ -133,12 +133,12 @@ toCamel src =
             (\r1 r2 r3 ->
                 src
                     |> String.trim
-                    |> Regex.replace r1 (\r -> "")
+                    |> Regex.replace r1 (\_ -> "")
                     |> Regex.replace r2
                         (\r ->
                             case r.submatches of
-                                fst :: snd :: _ ->
-                                    Maybe.map2 (\f s -> f ++ "-" ++ s) fst snd
+                                fst :: _ ->
+                                    Maybe.map (\f -> f ++ "-") fst
                                         |> Maybe.withDefault r.match
 
                                 _ ->
