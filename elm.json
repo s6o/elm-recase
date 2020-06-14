@@ -3,7 +3,7 @@
     "name": "s6o/elm-recase",
     "summary": "ReCase - convert a string from any case to any case",
     "license": "MIT",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "exposed-modules": [
         "ReCase"
     ],
